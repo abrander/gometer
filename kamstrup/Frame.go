@@ -25,6 +25,9 @@ const (
 
 	// Stop indicates the end of a frame.
 	Stop = byte(0x0d)
+
+	// Escape is used to escape reserved byte values in frames.
+	Escape = byte(0x1b)
 )
 
 var (
@@ -32,7 +35,7 @@ var (
 	escapes = map[byte]bool{
 		Stop:      true,
 		MeterAck:  true,
-		0x1b:      true,
+		Escape:    true,
 		FromMeter: true,
 		ToMeter:   true,
 	}
@@ -65,7 +68,7 @@ func (f *Frame) Decode(raw []byte) error {
 	for i := 1; i < frameLength-1; i++ {
 		b := raw[i]
 
-		if b == 0x1b {
+		if b == Escape {
 			b = raw[i+1] ^ 0xff
 			i++
 		}
@@ -136,7 +139,7 @@ func (f Frame) Encode() []byte {
 	for _, b := range payload {
 		// Check if we need escaping
 		if escapes[b] {
-			raw = append(raw, 0x1b)
+			raw = append(raw, Escape)
 			raw = append(raw, b^0xff)
 		} else {
 			raw = append(raw, b)
