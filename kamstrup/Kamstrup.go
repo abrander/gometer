@@ -82,7 +82,7 @@ readloop:
 }
 
 // GetRegisters will read one or more values from the supplied registers.
-func (k *Kamstrup) GetRegisters(registers ...uint16) ([]Value, error) {
+func (k *Kamstrup) GetRegisters(registers ...uint16) (map[uint16]Value, error) {
 	f := Frame{
 		Type:      ToMeter,
 		Address:   0x3f,
@@ -99,22 +99,29 @@ func (k *Kamstrup) GetRegisters(registers ...uint16) ([]Value, error) {
 
 	reply, err := k.SendAndReceive(f)
 	if err != nil {
-		return []Value{}, err
+		return nil, err
 	}
 
-	var values []Value
-	pos := 2 // Ignore the register
+	values := make(map[uint16]Value)
+	pos := 0
 	for r := 0; r < len(registers); r++ {
 		if pos >= len(reply.Data) {
-			return nil, ErrFrameTooShort
-		}
-		read, value, err := NewValue(reply.Data[pos:])
-		if err != nil {
-			return []Value{}, err
+			break
 		}
 
-		values = append(values, value)
-		pos += read + 2 // 2 is the register size (uint16)
+		reg := uint16(reply.Data[pos])<<8 + uint16(reply.Data[pos+1])
+		pos += 2
+
+		if pos >= len(reply.Data) {
+			break
+		}
+
+		read, value, err := NewValue(reply.Data[pos:])
+		if err == nil {
+			values[reg] = value
+		}
+
+		pos += read
 	}
 
 	return values, nil
@@ -131,7 +138,7 @@ func (k *Kamstrup) GetRegister(register uint16) (Value, error) {
 		return Value{}, ErrWrongNumberOfRegisters
 	}
 
-	return results[0], nil
+	return results[register], nil
 }
 
 // SendAndReceive will send a frame and try to receive and decode a reply.
