@@ -32,8 +32,8 @@ const (
 	Energy5 = uint16(0x003e) // Energy register 5: Return flow energy
 	Energy6 = uint16(0x005f) // Energy register 6: Tap water energy
 	Energy7 = uint16(0x0060) // Energy register 7: Heat energy Y
-	Energy8 = uint16(0x0061) // Energy register 8: [m^3 * T1]
-	Energy9 = uint16(0x006e) // Energy register 9: [m^3 * T2]
+	Energy8 = uint16(0x0061) // Energy register 8: [m³ * T1]
+	Energy9 = uint16(0x006e) // Energy register 9: [m³ * T2]
 )
 
 // Useful aliases for Multical 601 registers.
