@@ -59,5 +59,5 @@ func NewValue(raw []byte) (int, Value, error) {
 
 // String will return a string representation of the value and unit.
 func (v Value) String() string {
-	return fmt.Sprintf("%.0f %s", v.Value, v.Unit.String())
+	return fmt.Sprintf("%.3f %s", v.Value, v.Unit.String())
 }
