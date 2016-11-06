@@ -185,6 +185,34 @@ func (o *Obis) Parse(raw string) {
 	}
 }
 
+// String implements GoStringer.
+func (o Obis) String() string {
+	ret := ""
+
+	if o.A != "" {
+		ret += o.A
+
+		if o.B != "" {
+			ret += "-" + o.B
+		}
+	}
+
+	if o.C != "" {
+		ret += o.C
+		if o.D != "" {
+			ret += "." + o.D
+			if o.E != "" {
+				ret += "." + o.E
+				if o.F != "" {
+					ret += "&" + o.F
+				}
+			}
+		}
+	}
+
+	return ret
+}
+
 // Description will return a human readable description of the OBIS code (if
 // available).
 func (o *Obis) Description() string {
