@@ -89,3 +89,15 @@ func (u Unit) String() string {
 
 	return str
 }
+
+// UnitFromString will try to find a "Kamstrup-unit" based on a string
+// representation. If the unit is not found, the empty unit will be returned.
+func UnitFromString(in string) Unit {
+	for unit, unitStr := range unitString {
+		if unitStr == in {
+			return unit
+		}
+	}
+
+	return Unit(0)
+}
