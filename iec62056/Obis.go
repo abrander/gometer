@@ -137,8 +137,8 @@ var (
 )
 
 // NewObis will istantiate a new Obis.
-func NewObis(raw string) *Obis {
-	o := &Obis{}
+func NewObis(raw string) Obis {
+	o := Obis{}
 
 	o.Parse(raw)
 
